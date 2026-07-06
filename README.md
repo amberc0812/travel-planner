@@ -1,32 +1,39 @@
-# React + TypeScript + Vite
+# Travel Planner
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A calm, editorial trip planner for organizing multi-city journeys — day by day, place by place. Everything is saved in your browser, so it works offline and needs no account.
 
-Currently, two official plugins are available:
+**▶ Live app: [amberc0812.github.io/travel-planner](https://amberc0812.github.io/travel-planner/)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+![Travel Planner — All Trips](docs/screenshot.png)
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Trips → Cities → Days → Places** — build an itinerary as a clean hierarchy. Add cities, then days within each city, then places within each day.
+- **Rich place details** — attach transportation (flight/train/car/walk…), costs, documents (PDF/JPG), notes, and a time to any place.
+- **Drag & drop** — reorder days, places, and details, and drag a detail into any destination.
+- **Interactive map** — a 2D/3D globe of everywhere you've been and planned, colored by year and status.
+- **Export** — download a trip as a polished PDF or JPG.
+- **Collections** — group trips (e.g. "Europe 2026"), reorder them, or auto-sort by date.
+- **Make it yours** — pick a main accent color and light/dark/system theme in Settings.
 
-## Expanding the Oxlint configuration
+## Tech
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+React 19 · TypeScript · Vite · Tailwind CSS · dnd-kit · d3-geo · framer-motion. State persists to `localStorage` — no backend required for the core app.
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## Run locally
+
+```bash
+npm install
+npm run dev      # start the dev server
+npm run build    # production build
+npm run lint     # oxlint
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Deployment
+
+- **GitHub Pages** (this live link) — a GitHub Actions workflow (`.github/workflows/deploy.yml`) builds and publishes on every push to `main`. Static hosting, so the optional email-sharing backend below is inactive here.
+- **Optional share-by-email backend** — the `/api` folder contains Vercel serverless functions that store a trip and email a shareable link (via Neon Postgres + Resend). To enable it, import this repo into [Vercel](https://vercel.com/new) and set the env vars in `.env.example`. See `DEPLOY.md`.
+
+---
+
+🤖 Built with [Claude Code](https://claude.com/claude-code)
