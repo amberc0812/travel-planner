@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useReducer, useState, type ReactNode } from 'react'
 import type { City, Detail, DetailType, Folder, Trip } from './types'
-import { SEED_TRIPS } from './seed'
 import { toISO } from './date'
 import { lookupCountry } from './geo-cities'
 
@@ -334,7 +333,8 @@ function load(): Trip[] {
   } catch {
     /* ignore */
   }
-  return migrateTrips(SEED_TRIPS)
+  // Fresh visitors start with a blank app to plan their own trips.
+  return []
 }
 
 const FOLDERS_KEY = 'travel-planner:folders:v1'
