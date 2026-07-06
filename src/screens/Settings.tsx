@@ -1,6 +1,46 @@
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { useStore } from '../lib/store'
 import { ACCENTS, useSettings, type ThemeMode } from '../lib/settings'
+import { Icon } from '../components/Icon'
+
+/** localStorage keys that hold all of a person's data. */
+const DATA_KEYS = ['travel-planner:v2', 'travel-planner:folders:v1', 'travel-planner:settings']
+
+function exportData() {
+  const data = Object.fromEntries(DATA_KEYS.map((k) => [k, localStorage.getItem(k)]))
+  const payload = { app: 'travel-planner', exportedAt: new Date().toISOString(), data }
+  const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }))
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `travel-planner-backup-${new Date().toISOString().slice(0, 10)}.json`
+  a.click()
+  setTimeout(() => URL.revokeObjectURL(url), 1000)
+}
+
+function importData(file: File) {
+  const reader = new FileReader()
+  reader.onload = () => {
+    let data: Record<string, unknown> | undefined
+    try {
+      const parsed = JSON.parse(String(reader.result)) as { data?: Record<string, unknown> }
+      data = parsed.data ?? (parsed as Record<string, unknown>)
+    } catch {
+      window.alert('That file could not be read as a Travel Planner backup.')
+      return
+    }
+    const keys = DATA_KEYS.filter((k) => typeof data?.[k] === 'string')
+    if (keys.length === 0) {
+      window.alert('No Travel Planner data was found in that file.')
+      return
+    }
+    if (!window.confirm('Replace everything in this app with the imported data? The trips currently here will be overwritten.')) {
+      return
+    }
+    for (const k of keys) localStorage.setItem(k, data[k] as string)
+    window.location.reload()
+  }
+  reader.readAsText(file)
+}
 
 const THEME_OPTIONS: { value: ThemeMode; label: string }[] = [
   { value: 'light', label: 'Day' },
@@ -25,6 +65,7 @@ function initials(name: string): string {
 export function Settings() {
   const { trips } = useStore()
   const { accent, setAccent, theme, setTheme } = useSettings()
+  const fileRef = useRef<HTMLInputElement>(null)
 
   const travelers = useMemo<Traveler[]>(() => {
     const map = new Map<string, Traveler>()
@@ -137,6 +178,44 @@ export function Settings() {
               ))}
             </ul>
           )}
+        </section>
+
+        {/* Backup & restore */}
+        <section className="mt-10">
+          <h2 className="font-display text-heading">Backup &amp; restore</h2>
+          <p className="mt-1 text-caption text-ink-45">
+            Your trips are saved only in this browser. Export a file to move everything to another device or to the
+            live app, then import it there.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={exportData}
+              className="focusable inline-flex items-center gap-1.5 rounded-button border border-hairline bg-surface px-3.5 py-2 text-caption font-medium text-ink transition-colors hover:border-ink-40"
+            >
+              <Icon name="export" size={16} />
+              Export data
+            </button>
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              className="focusable inline-flex items-center gap-1.5 rounded-button border border-hairline bg-surface px-3.5 py-2 text-caption font-medium text-ink transition-colors hover:border-ink-40"
+            >
+              <Icon name="file" size={16} />
+              Import data
+            </button>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="application/json,.json"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0]
+                if (f) importData(f)
+                e.target.value = ''
+              }}
+            />
+          </div>
         </section>
       </div>
     </div>
