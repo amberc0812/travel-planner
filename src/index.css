@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Core palette — from Figma Visual Guide v2 */
+  --canvas: #ece7db; /* warm cream — app background */
+  --surface: #fbf7ee; /* lighter cream — cards/sheets */
+  --ink: #021034; /* navy — all body & heading text */
+
+  /* Muted text & lines = navy at reduced opacity (per Visual Guide) */
+  --ink-60: rgba(2, 16, 52, 0.62); /* secondary text */
+  --ink-45: rgba(2, 16, 52, 0.45); /* tertiary / hints */
+  --ink-40: rgba(2, 16, 52, 0.4); /* labels / overline */
+  --hairline: rgba(2, 16, 52, 0.12); /* borders */
+
+  /* Accents — used sparingly (10%) */
+  --dusty-blue: #adc4cb;
+  --sage: #d7d5a5;
+  --sand-gold: #d4c075;
+  --terracotta: #8b302f; /* selected/active only — never running text */
+
+  /* Status chips (bg / fg) */
+  --chip-planning-bg: #adc4cb;
+  --chip-planning-fg: #13323a;
+  --chip-review-bg: #d7d5a5;
+  --chip-review-fg: #3e3d18;
+  --chip-intrip-bg: #8b302f;
+  --chip-intrip-fg: #fbedeb;
+  --chip-done-bg: #e4dfd2;
+  --chip-done-fg: #6a6557;
+
+  /* Radius scale */
+  --radius-card: 20px;
+  --radius-button: 12px;
+  --radius-badge: 8px;
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --canvas: #1b1916;
+  --surface: #262320;
+  --ink: #ece7db;
+  --ink-60: rgba(236, 231, 219, 0.64);
+  --ink-45: rgba(236, 231, 219, 0.46);
+  --ink-40: rgba(236, 231, 219, 0.36);
+  --hairline: rgba(236, 231, 219, 0.14);
+  color-scheme: dark;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  /* Calm, editorial focus ring for inline-editable fields */
+  [contenteditable]:focus,
+  .focusable:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--dusty-blue);
+    border-radius: 6px;
+  }
+
+  ::selection {
+    background: rgba(173, 196, 203, 0.5);
+  }
+
+  /* Inline-editable text — seamless, no input chrome */
+  .editable {
+    outline: none;
+    min-width: 1ch;
+    cursor: text;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .editable:empty::before {
+    content: attr(data-placeholder);
+    color: var(--ink-45);
+    pointer-events: none;
+  }
+  .editable:focus-visible {
+    outline: none;
+  }
+
+  /* Markdown rendering inside Note details */
+  .prose-note > :first-child {
+    margin-top: 0;
+  }
+  .prose-note > :last-child {
+    margin-bottom: 0;
+  }
+  .prose-note p {
+    margin: 0 0 0.4em;
+  }
+  .prose-note strong {
+    font-weight: 500;
+  }
+  .prose-note em {
+    font-style: italic;
+  }
+  .prose-note a {
+    color: var(--terracotta);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .prose-note ul,
+  .prose-note ol {
+    margin: 0.2em 0 0.4em;
+    padding-left: 1.25em;
+  }
+  .prose-note ul {
+    list-style: disc;
+  }
+  .prose-note ol {
+    list-style: decimal;
+  }
+  .prose-note code {
+    font-family: ui-monospace, monospace;
+    font-size: 0.9em;
+    background: var(--canvas);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+  }
+}
