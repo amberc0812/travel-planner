@@ -40,10 +40,23 @@ export function DetailRow({ detail, onPatch, onDelete, dragHandle }: DetailRowPr
               className="focusable w-full resize-none rounded-md bg-transparent text-body text-ink placeholder:text-ink-45"
             />
           ) : (
-            <button
-              type="button"
-              onClick={() => setEditingNote(true)}
-              className="block w-full text-left"
+            <div
+              role="button"
+              tabIndex={0}
+              // Enter edit mode on a plain click, but not when the click ended a
+              // text selection — so the note can be selected and copied like any other field.
+              onClick={() => {
+                const sel = window.getSelection()
+                if (sel && !sel.isCollapsed) return
+                setEditingNote(true)
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  setEditingNote(true)
+                }
+              }}
+              className="block w-full cursor-text text-left"
               aria-label="Edit note"
             >
               {detail.text ? (
@@ -53,7 +66,7 @@ export function DetailRow({ detail, onPatch, onDelete, dragHandle }: DetailRowPr
               ) : (
                 <span className="text-body text-ink-45">{meta.placeholder}</span>
               )}
-            </button>
+            </div>
           )
         ) : detail.type === 'time' ? (
           <div className="flex items-center gap-1.5 text-body">
