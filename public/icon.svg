@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Travel Planner">
+  <!-- Full-bleed background so the icon stays clean when masked to a circle/squircle -->
+  <rect width="512" height="512" fill="#adc4cb"/>
+  <!-- Location pin, centred well within the maskable safe zone -->
+  <g fill="none" stroke="#021034" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M256 132c-53 0-96 42-96 94 0 66 96 154 96 154s96-88 96-154c0-52-43-94-96-94Z"/>
+    <circle cx="256" cy="226" r="34" fill="#fbf7ee"/>
+  </g>
+</svg>
