@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { StoreProvider, useStore, newTrip, uid } from './lib/store'
 import { SettingsProvider } from './lib/settings'
+import { useIsMobile } from './lib/useIsMobile'
+import { MobileApp } from './mobile/MobileApp'
 import { NavRail, type NavView } from './components/NavRail'
 import { Home } from './screens/Home'
 import { Editor } from './screens/Editor'
@@ -78,11 +80,17 @@ function Shell() {
   )
 }
 
+/** Phones get the dedicated mobile app; everything else keeps the desktop rail layout. */
+function Root() {
+  const isMobile = useIsMobile()
+  return isMobile ? <MobileApp /> : <Shell />
+}
+
 export default function App() {
   return (
     <SettingsProvider>
       <StoreProvider>
-        <Shell />
+        <Root />
       </StoreProvider>
     </SettingsProvider>
   )

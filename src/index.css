@@ -49,6 +49,24 @@
   color-scheme: dark;
 }
 
+/* Mobile bottom-sheet entrance */
+@keyframes tp-scrim-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes tp-sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
 @layer base {
   html,
   body,
